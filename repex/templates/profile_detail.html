@@ -6,37 +6,32 @@
 {% block content %}
   <div class="row g-4">
     <div class="col-md-4">
-      {% if profile.avatar %}
-        <img src="{{ profile.avatar.url }}" alt="avatar" class="w-100 rounded-circle shadow mb-2" />
-      {% elif profile.id == request.user.id %}
-        <div style="width: 100%; aspect-ratio: 1 / 1;" class="bg-body-tertiary rounded-circle d-flex">
-          <a href="{% url 'perfil_update' request.user.id %}" class="text-decoration-none m-auto p-5">
-            <i class="fa-solid fa-image"></i>
-            Adicione sua foto de perfil
-          </a>
+      <div class="row">
+        <div class="col-4 col-md-12">
+          {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="avatar" class="w-100 rounded-circle shadow mb-2" />
+          {% elif profile.id == request.user.id %}
+            <div style="width: 100%; aspect-ratio: 1 / 1;" class="bg-body-tertiary rounded-circle d-flex">
+              <a href="{% url 'perfil_update' request.user.id %}" class="text-decoration-none m-auto p-5">
+                <i class="fa-solid fa-image"></i>
+                Adicione sua foto de perfil
+              </a>
+            </div>
+          {% else %}
+            <img src="{% static 'imgs/user_placeholder.png' %}" alt="avatar" class="w-100 rounded-circle shadow mb-2" />
+          {% endif %}
         </div>
-      {% else %}
-        <img src="{% static 'imgs/user_placeholder.png' %}" alt="avatar" class="w-100 rounded-circle shadow mb-2" />
-      {% endif %}
-      <h3 class="fw-bold mt-1" style="color: {{ identidade_visual.cor_titulo }};">{{ profile.user.nome_usual }}</h3>
-      {% if profile.bio %}
-        <p>{{ profile.bio }}</p>
-      {% elif profile.id == request.user.id %}
-        <a href="{% url 'perfil_update' request.user.id %}" class="text-decoration-none"><i class="fa-solid fa-book-open-reader"></i> Adicione sua biografia</a>
-      {% endif %}
-      <div class="mt-3">
-        {% include 'partials/_social_links.html' with links=profile.user.social_links.all %}
-      </div>
-
-      <div class="d-flex gap-2 justify-content-between">
-        {% if profile.id == request.user.id %}
-          <a class="btn text-white flex-grow-1 bg-dark" href="{% url 'dashboard' %}">Dashboard</a>
-
-          <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button class="btn text-white flex-grow-1 bg-danger" type="submit">Sair</button>
-          </form>
-        {% endif %}
+        <div class="col-8 col-md-12">
+          <h3 class="fw-bold mt-1" style="color: {{ identidade_visual.cor_titulo }};">{{ profile.user.nome_usual }}</h3>
+          {% if profile.bio %}
+            <p>{{ profile.bio }}</p>
+          {% elif profile.id == request.user.id %}
+            <a href="{% url 'perfil_update' request.user.id %}" class="text-decoration-none"><i class="fa-solid fa-book-open-reader"></i> Adicione sua biografia</a>
+          {% endif %}
+          <div class="mt-3">
+            {% include 'partials/_social_links.html' with links=profile.user.social_links.all %}
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-md-8">
