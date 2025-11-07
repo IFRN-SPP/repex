@@ -32,7 +32,7 @@ class Projeto(models.Model):
     descricao = HTMLField(_("Descricao"), blank=True)
     resumo = HTMLField(_("Resumo"), blank=True)
     justificativa = HTMLField(_("Justificativa"), blank=  True)
-    area_conhecimento = models.ForeignKey(AreaConhecimento, on_delete=models.CASCADE, related_name='area_conhecimento', null=True, blank=True)
+    area_conhecimento = models.ForeignKey(AreaConhecimento, on_delete=models.CASCADE, related_name='areas_projetos', null=True, blank=True)
     objetivo = HTMLField(_("Objetivo"), blank=True)
     criado_em = models.DateTimeField(auto_now_add=True)
     resultados = HTMLField(_("Resultados"), blank=True)
