@@ -9,7 +9,7 @@
       <div class="row">
         <div class="col-4 col-md-12">
           {% if profile.avatar %}
-            <img src="{{ profile.avatar.url }}" alt="avatar" class="w-100 rounded-circle shadow mb-2" />
+            <img src="{{ profile.avatar.url }}" style="max-width: 300px;" alt="avatar" class="w-100 rounded-circle shadow mb-2" />
           {% elif profile.id == request.user.id %}
             <div style="width: 100%; aspect-ratio: 1 / 1;" class="bg-body-tertiary rounded-circle d-flex">
               <a href="{% url 'perfil_update' request.user.id %}" class="text-decoration-none m-auto p-5">
@@ -35,14 +35,16 @@
       </div>
     </div>
     <div class="col-md-8">
+      {% if profile.user.projetos.exists %}
       <h4 class="fw-bold" style="color: {{ identidade_visual.cor_sistema }};">Projetos que {{ profile.user.get_primeiro_nome }} está envolvido:</h4>
+      {% else %}
+      <h4 class="fw-bold" style="color: {{ identidade_visual.cor_sistema }};">{{ profile.user.get_primeiro_nome }} não está envolvido em nenhum projeto.</h4>
+      {% endif %}
       <div class="row g-3">
         {% for projeto in profile.user.projetos.all %}
           <div class="col-md-6">
             {% include 'partials/_card.html' %}
           </div>
-        {% empty %}
-          <p>{{ profile.user.get_primeiro_nome }} ainda não está envolvido em nenhum projeto.</p>
         {% endfor %}
       </div>
     </div>

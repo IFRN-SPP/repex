@@ -15,7 +15,9 @@
      <select name="area_conhecimento" class="rounded-pill form-select form-select-sm border border-0 w-auto bg-white py-2">
         <option class="mx-2" value="">ÁREAS DE CONHECIMENTO</option>
         {% for area in areas %}
-          <option class="border border-0" value="{{ area.id }}" {% if request.GET.area_conhecimento == area.id %}selected{% endif %}>{{ area.area }}</option>
+          {% if area.areas_projetos.exists %}
+            <option class="border border-0" value="{{ area.id }}" {% if request.GET.area_conhecimento == area.id %}selected{% endif %}>{{ area.area }}</option>
+          {% endif %}
         {% endfor %}
       </select>
 
