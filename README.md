@@ -11,6 +11,14 @@ Para usar o sistema, siga esses passos:
 ### Após clonar o sistema, ative a venv e instale as dependências:
     pip install -r requirements.txt
 
+## Caso esteja em ambiente de desenvolvimento, defina debug=True e troque o conteúdo de DATABASES por:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 ### Após isso faça as migrações:
     python .\manage.py migrate
 
