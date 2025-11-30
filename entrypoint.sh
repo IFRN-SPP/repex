@@ -19,7 +19,7 @@ echo "Setting socket directory permissions..."
 chmod 770 /run/sockets
 
 echo "Starting Gunicorn..."
-exec gunicorn --bind unix:/run/sockets/anais_expotec.sock \
+exec gunicorn --bind unix:/run/sockets/repex.sock \
 	--workers 3 \
 	--timeout 60 \
 	--access-logfile - \

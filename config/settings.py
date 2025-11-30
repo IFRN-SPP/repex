@@ -23,10 +23,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+BUILD_ENV = os.getenv("BUILD_ENV", default="local")
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", default="127.0.0.1").split()
+
+if os.getenv("CSRF_TRUSTED_ORIGINS"):
+    CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split()
 
 
 # Application definition
@@ -84,17 +92,34 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+if BUILD_ENV == "local":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+        }
+    }
+
+if BUILD_ENV == "production":
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.getenv("EMAIL_HOST")
+    EMAIL_POST = os.getenv("EMAIL_POST")
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # Password validation
@@ -121,7 +146,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Noronha'
+TIME_ZONE = 'America/Recife'
 
 USE_I18N = True
 
@@ -131,7 +156,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
+MEDIA_URL = "media/"
+
+# Diretórios adicionais para arquivos estáticos
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Diretório onde os arquivos estáticos coletados serão armazenados
+if BUILD_ENV == "local":
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    STATIC_ROOT = os.getenv("STATIC_ROOT")
+    MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+
 
 
 # Default primary key field type
@@ -153,19 +193,6 @@ MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-CLIENT_ID = os.getenv("SUAP_CLIENT_ID")
-CLIENT_SECRET = os.getenv("SUAP_CLIENT_SECRET")
-SECRET_KEY = os.getenv('SECRET_KEY')
-
 # config users
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "index"
@@ -174,8 +201,8 @@ SUAP_URL_BASE = "https://suap.ifrn.edu.br/"
 
 OAUTH_PROVIDERS = {
     "suap": {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        "client_id": os.getenv("SUAP_CLIENT_ID"),
+        "client_secret": os.getenv("SUAP_CLIENT_SECRET"),
         "authorize_url": f"{SUAP_URL_BASE}o/authorize/",
         "access_token_url": f"{SUAP_URL_BASE}o/token/",
         "userinfo_url": f"{SUAP_URL_BASE}api/rh/eu/",
