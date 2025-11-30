@@ -1,0 +1,99 @@
+name: Deploy Django
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      has_dev_key: ${{ steps.check.outputs.has_dev_key }}
+      has_prod_key: ${{ steps.check.outputs.has_prod_key }}
+    steps:
+      - id: check
+        env:
+          DEV_KEY: ${{ secrets.SSH_PRIVATE_KEY_DEV }}
+          PROD_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [ -n "$DEV_KEY" ]; then
+            echo "has_dev_key=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_dev_key=false" >> $GITHUB_OUTPUT
+          fi
+          if [ -n "$PROD_KEY" ]; then
+            echo "has_prod_key=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_prod_key=false" >> $GITHUB_OUTPUT
+          fi
+
+  deploy_dev:
+    needs: check-secrets
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/dev' &&
+      needs.check-secrets.outputs.has_dev_key == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_DEV }}
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_DEV }} >> ~/.ssh/known_hosts
+      - name: Deploy code via rsync
+        run: |
+          rsync -az --delete \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude=".env" \
+            ./ ${{ secrets.SERVER_USER_DEV }}@${{ secrets.SERVER_DEV }}:${{ secrets.LOCATION_DEV }}
+      - name: Restart Docker Compose
+        run: |
+          ssh ${{ secrets.SERVER_USER_DEV }}@${{ secrets.SERVER_DEV }} << 'EOF'
+          cd ${{ secrets.LOCATION_DEV }}
+          docker compose -f compose.yaml up --build -d
+          docker compose -f compose.yaml run --rm django python manage.py migrate
+          EOF
+
+  deploy_prod:
+    needs: check-secrets
+    if: |
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.merged == true &&
+      needs.check-secrets.outputs.has_prod_key == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER }} >> ~/.ssh/known_hosts
+      - name: Deploy code via rsync
+        run: |
+          rsync -az --delete \
+            --exclude=".git" \
+            --exclude=".github" \
+            --exclude=".env" \
+            ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }}:${{ secrets.LOCATION }}
+      - name: Restart Docker Compose
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER }} << 'EOF'
+          cd ${{ secrets.LOCATION }}
+          docker compose -f compose.yaml up --build -d
+          EOF
+
