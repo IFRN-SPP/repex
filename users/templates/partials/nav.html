@@ -11,11 +11,24 @@
         class="fas fa-bars fa-xl text-white"></i></a>
     <div class="collapse navbar-collapse d-none d-lg-flex justify-content-between">
       <ul class="navbar-nav ms-auto d-flex align-items-center">
-        <li class="nav-item ms-2">
-          <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="nav-link"><i class="fa-solid fa-arrow-right-from-bracket fa-xl text-white"></i></button>
-          </form>
+        <li class="nav-item">
+          <div class="dropdown">
+            <button class="btn btn-transparent text-white dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">Perfil</button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="{% url 'profile_detail' request.user.id %}">Ver perfil</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'perfil_update' request.user.id %}">Atualizar perfil</a>
+              </li>
+              <li>
+                <form action="{% url 'logout' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">Logout</button>
+                </form>
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
     </div>

@@ -49,6 +49,7 @@
           <a class="nav-link text-white fw-bold" href="{% url 'explorar' %}">Explorar</a>
         </li>
         {% if user.is_authenticated %}
+        <li class="nav-item">
           <div class="dropdown">
             <button class="btn btn-transparent text-white dropdown-toggle fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">Perfil</button>
             <ul class="dropdown-menu">
@@ -66,6 +67,7 @@
               </li>
             </ul>
           </div>
+        </li>
         {% else %}
           <div class="btn-group-minimal">
             <li class="nav-item">
