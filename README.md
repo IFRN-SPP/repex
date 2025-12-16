@@ -4,8 +4,7 @@ Os projetos de ensino, pesquisa e extensão do IFRN carecem de uma plataforma we
 ## Tecnologias Utilizadas
 - Python 3.13
 - Django 5.2.5
-- Banco de dados: PostgreSQL
-- Outras bibliotecas: [listar]
+- Banco de dados: Postgres
 
 ## Pré-requisitos
 - Python 3.8 ou superior
@@ -16,8 +15,8 @@ Os projetos de ensino, pesquisa e extensão do IFRN carecem de uma plataforma we
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/usuario/projeto.git
-cd projeto
+git clone https://github.com/IFRN-SPP/repex.git
+cd repex
 ```
 
 ### 2. Crie e ative um ambiente virtual
@@ -80,8 +79,32 @@ REPEX/
 │   ├── README.md                # Detalhes da engenharia de software
 |
 ├── repex/                       # App principal do sistema 
+│   ├── fixtures/                # Objetos prontos para testes
+│   ├── templates/               # Páginas HTML
+│   |    ├── partials/           # Estruturas HTML parceladas
+│   ├── templatetags/            # Funções extras para templates
+│   |    ├── news_extras.py      # Função para fazer com que o carrossel de notícias funcione
+│   ├── __init__.py              # Arquivo de execução do django
+│   ├── admin.py                 # Arquivo de execução do django admin
+│   ├── apps.py                  # Arquivo de execução de app do django
+│   ├── context_processors.py    # Funções que renderizam dados em todas as páginas do sistema
+│   ├── forms.py                 # Configuração de formulários
+│   ├── models.py                # Estrutura do banco de dados
+│   ├── urls.py                  # Caminhos das páginas e funções
+│   ├── views.py                 # Lógica, execução e renderização de dados das páginas e funções
 |
-├── users/                       # App de usuários do sistema 
+├── users/                       # App relativo aos usuários do sistema
+│   ├── templates/               # Páginas HTML
+│   ├── __init__.py              # Arquivo de execução do django
+│   ├── admin.py                 # Arquivo de execução do django admin
+│   ├── apps.py                  # Arquivo de execução de app do django
+│   ├── forms.py                 # Configuração de formulários
+│   ├── managers.py              # Configuração de criação de usuário via terminal
+│   ├── models.py                # Estrutura do banco de dados
+│   ├── oauthlib_client.py       # Função para login com Suap
+│   ├── signals.py               # Definição do grupo e permissões de professor
+│   ├── urls.py                  # Caminhos das páginas e funções
+│   ├── views.py                 # Lógica, execução e renderização de dados das páginas e funções
 |
 ├── .env                         # Variáveis de ambiente (NÃO vai pro Git)
 ├── .env.example                 # Modelo de variáveis de ambiente

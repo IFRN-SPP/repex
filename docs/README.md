@@ -1,5 +1,5 @@
 # Engenharia de software - REPEX
-Documentação de engenharia de software. [Clique aqui para ver a documentação técnica do Repex](code.md)
+Documentação de engenharia de software.
 
 ## Sumário
 - [Resumo](#resumo)
