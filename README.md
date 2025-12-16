@@ -129,8 +129,6 @@ REPEX/
 - Gerenciamento de projetos e notícias
 - Painel administrativo
 
-**Para instruções detalhadas**, consulte o [Manual do Usuário](docs/manual/index.html)
-
 ## Autores
 - [Wescley Plínio Damasceno Galdino](https://github.com/WescleyPlinio) 
 - [Ellainy Nayara Motta dos Santos](https://github.com/ellainy) 
