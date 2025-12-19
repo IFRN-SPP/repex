@@ -27,9 +27,10 @@ Configurações do sistema
           <td>{{ r.url_base }}</td>
           <td>
             <a href="{% url 'rede_social_update' r.id %}" class="btn btn-sm btn-warning">Editar</a>
-            <a class="btn btn-sm btn-danger">Excluir</a>
+            <a class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmarExclusaoSocialModal{{ r.pk }}">Excluir</a>
           </td>
         </tr>
+        {% include "partials/_modal_delete_social_net.html" %}
         {% endfor %}
       </tbody>
     </table>
@@ -87,6 +88,7 @@ Configurações do sistema
           <th>Cor do sistema</th>
           <th>Cor suplente para o sistema</th>
           <th>Cor dos títulos</th>
+          <th>Opção</th>
         </tr>
       </thead>
       <tbody>
@@ -110,7 +112,6 @@ Configurações do sistema
           <td>{{ i.cor_titulo }}</td>
           <td>
             <a href="{% url 'identidade_visual_update' i.id %}" class="btn btn-sm btn-warning">Editar</a>
-            <a class="btn btn-sm btn-danger">Excluir</a>
           </td>
         </tr>
         {% endfor %}
@@ -137,6 +138,7 @@ Configurações do sistema
           <th>CEP</th>
           <th>Endereço</th>
           <th>Site</th>
+          <th>Opção</th>
         </tr>
       </thead>
       <tbody>
@@ -161,7 +163,6 @@ Configurações do sistema
           <td>{{ i.site }}</td>
           <td>
             <a href="{% url 'instituicao_update' i.id %}" class="btn btn-sm btn-warning">Editar</a>
-            <a class="btn btn-sm btn-danger">Excluir</a>
           </td>
         </tr>
         {% endfor %}
