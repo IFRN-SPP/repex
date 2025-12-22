@@ -3,7 +3,7 @@ from .models import Projeto, Noticia, IdentidadeVisual, FotoProjeto, AreaConheci
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.http import JsonResponse, HttpResponseRedirect
-from .forms import ProjetoForm, IdentidadeVisualForm
+from .forms import ProjetoForm, IdentidadeVisualForm, UserSocialLinkForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -232,7 +232,7 @@ class RedeSocialCreateView(LoginRequiredMixin, UserPassesTestMixin ,SuccessMessa
 
 class UserSocialLinkCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = UserSocialLink
-    fields = ["rede", "url"]
+    form_class = UserSocialLinkForm
     template_name = "profile_rede_social_form.html"
     success_message = "Rede social pessoal adicionada com sucesso!"
     success_url = reverse_lazy("dashboard")
@@ -305,7 +305,7 @@ class IdentidadeVisualUpdateView(LoginRequiredMixin, UserPassesTestMixin ,Succes
 
 class RedeSocialUpdateView(LoginRequiredMixin, UserPassesTestMixin ,SuccessMessageMixin, UpdateView):
     model = RedeSocial
-    fields = ['nome', 'url_base']
+    form_class = UserSocialLinkForm
     template_name = 'rede_social_form.html'
     success_message = 'Rede social atualizada com sucesso!'
     success_url = reverse_lazy('painel')

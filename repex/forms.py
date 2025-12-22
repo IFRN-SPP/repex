@@ -1,12 +1,24 @@
 from django import forms
 from django_select2.forms import Select2MultipleWidget
-from .models import Projeto, FotoProjeto, IdentidadeVisual
+from .models import Projeto, FotoProjeto, IdentidadeVisual, UserSocialLink
 from crispy_forms.layout import Layout, Field
 from crispy_forms.helper import FormHelper
 from tinymce.widgets import TinyMCE
 
 class MultiFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
+
+class UserSocialLinkForm(forms.ModelForm):
+    class Meta:
+        model = UserSocialLink
+        fields = [
+            "rede",
+            "url",
+        ] 
+        labels = {
+            "rede": "Selecione uma rede social:",
+            "url": "Digite o seu username:"   
+        }
 
 class ProjetoForm(forms.ModelForm):
     class Meta:
