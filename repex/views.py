@@ -305,7 +305,7 @@ class IdentidadeVisualUpdateView(LoginRequiredMixin, UserPassesTestMixin ,Succes
 
 class RedeSocialUpdateView(LoginRequiredMixin, UserPassesTestMixin ,SuccessMessageMixin, UpdateView):
     model = RedeSocial
-    form_class = UserSocialLinkForm
+    fields = ["rede", "url"]
     template_name = 'rede_social_form.html'
     success_message = 'Rede social atualizada com sucesso!'
     success_url = reverse_lazy('painel')
@@ -316,7 +316,7 @@ class RedeSocialUpdateView(LoginRequiredMixin, UserPassesTestMixin ,SuccessMessa
 
 class UserSocialLinkUpdateView(LoginRequiredMixin, UserPassesTestMixin ,SuccessMessageMixin, UpdateView):
     model = UserSocialLink
-    fields = ["rede", "url"]
+    form_class = UserSocialLinkForm
     template_name = "profile_rede_social_form.html"
     success_message = "Rede social pessoal atualizada com sucesso!"
     success_url = reverse_lazy("dashboard")
