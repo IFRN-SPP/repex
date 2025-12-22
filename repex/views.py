@@ -305,7 +305,7 @@ class IdentidadeVisualUpdateView(LoginRequiredMixin, UserPassesTestMixin ,Succes
 
 class RedeSocialUpdateView(LoginRequiredMixin, UserPassesTestMixin ,SuccessMessageMixin, UpdateView):
     model = RedeSocial
-    fields = ["rede", "url"]
+    fields = ["nome", "url_base"]
     template_name = 'rede_social_form.html'
     success_message = 'Rede social atualizada com sucesso!'
     success_url = reverse_lazy('painel')
