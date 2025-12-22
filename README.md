@@ -75,7 +75,6 @@ REPEX/
 │
 ├── docs/                        # Documentação
 │   ├── imgs/                    # Imagens do  do usuário
-│   ├── code.md                  # Documentação técnica
 │   ├── README.md                # Detalhes da engenharia de software
 |
 ├── repex/                       # App principal do sistema 
