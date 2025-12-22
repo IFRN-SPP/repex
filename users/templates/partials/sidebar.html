@@ -1,71 +1,88 @@
 {% load static %}
-<aside
-  class="main-sidebar sidebar-dark-primary elevation-1 {% if not identidade_visual.cor_sistema %}bg-dark{% endif %}"
-  style="{% if identidade_visual.cor_suplente %}
-                   background: linear-gradient(135deg, {{ identidade_visual.cor_sistema }}, {{ identidade_visual.cor_suplente }});
-                {% else %}
-                  background: {{ identidade_visual.cor_sistema }};
-                {% endif %}">
-  {% if identidade_visual.logo %}
-  <a href="{% url 'index' %}" class="brand-link border border-0">
-    <img src="{{ identidade_visual.logo.url }}" class="w-100" alt="Logo" />
-  </a>
-  {% else %}
-  <a href="{% url 'index' %}" class="brand-link border border-0 text-center text-decoration-none">
-    <img style="max-height: 20px;" src="{% static 'imgs/logo.png' %}" />
-  </a>
-  {% endif %}
-  <div class="sidebar">
-    <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-        <li class="nav-item">
-          <p class="mb-0 ms-2 text text-white">Navegação</p>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'index' %}" class="nav-link">
-            <i class="fa-solid fa-home fa-lg nav-icon"></i>
-            <p class="text">Início</p>
-          </a>
-        </li>
-        <li class="nav-item mb-3">
-          <a href="{% url 'profile_detail' request.user.id %}" class="nav-link">
-            <i class="fa-solid fa-user fa-lg nav-icon"></i>
-            <p class="text">Perfil público</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <p class="mb-0 ms-2 text text-white">Gestão do usuário</p>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'dashboard' %}" class="nav-link">
-            <i class="fa-solid fa-table fa-lg nav-icon"></i>
-            <p class="text">Dashboard</p>
-          </a>
-        </li>
-        <li class="nav-item mb-3">
-          <a href="{% url 'perfil_update' request.user.id %}" class="nav-link">
-            <i class="fa-solid fa-pen fa-lg nav-icon"></i>
-            <p class="text">Editar Perfil</p>
-          </a>
-        </li>
-        {% if user.is_superuser %}
-        <li class="nav-item">
-          <p class="mb-0 ms-2 text text-white">Administração do sistema</p>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'painel' %}" class="nav-link">
-            <i class="fa-solid fa-toolbox fa-lg nav-icon"></i>
-            <p class="text">Opções do sistema</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'users' %}" class="nav-link">
-            <i class="fa-solid fa-users fa-lg nav-icon"></i>
-            <p class="text">Gerenciar usuários</p>
-          </a>
-        </li>
-        {% endif %}
-      </ul>
-    </nav>
+<button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <a href="{% url "index" %}">
+        <img src="{% if identidade_visual.logo %}{{ identidade_visual.logo.url }}{% else %}{% static 'imgs/logo.png' %}{% endif %}" alt="Logo do sistema" class="w-100" />
+    </a>
   </div>
+
+  <div class="user-panel">
+    {% if request.user.profile.avatar %}
+    <div class="user-img">
+      <a class="text-decoration-none" href="{% url 'profile_detail' request.user.id %}">
+          <img src="{{ request.user.profile.avatar.url }}" alt="Seu avatar" class="w-100 rounded rounded-circle" />
+        </a>
+      </div>
+      {% endif %}
+    <div class="user-info">
+      <div class="user-name">{{ request.user.nome_usual }}</div>
+      {% if request.user.vinculo %}
+        <h6 class="user-status">{{ request.user.vinculo }}</h6>
+      {% endif %}
+    </div>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li class="sidebar-header">Navegação</li>
+    <li class="nav-item">
+      <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <span class="nav-label">Dashboard</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'profile_detail' request.user.id %}" class="nav-link">
+        <i class="nav-icon fas fa-user"></i>
+        <span class="nav-label">Perfil público</span>
+      </a>
+    </li>
+
+    {% if perms.repex.add_projeto %}
+      <li class="sidebar-header">Conteúdo</li>
+      <li class="nav-item has-treeview">
+        <a class="nav-link">
+          <i class="nav-icon fas fa-plus"></i>
+          <span class="nav-label">Cadastrar</span>
+        </a>
+        <ul class="treeview-menu">
+          <li class="nav-item">
+            <a href="{% url 'projeto_create' %}" class="nav-link">
+              <i class="nav-icon fas fa-net"></i>
+              <span class="nav-label">Projetos</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'noticia_create' %}" class="nav-link">
+              <i class="nav-icon fas fa-notice"></i>
+              <span class="nav-label">Notícias</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+    {% if request.user.is_superuser %}
+      <li class="sidebar-header">Configurações </li>
+      <li class="nav-item">
+        <a href="{% url 'painel' %}" class="nav-link {% if request.resolver_match.url_name == 'painel' %}active{% endif %}">
+          <i class="nav-icon fas fa-cog"></i>
+          <span class="nav-label">Sistema</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'users' %}" class="nav-link {% if request.resolver_match.url_name == 'users' %}active{% endif %}">
+          <i class="nav-icon fas fa-users"></i>
+          <span class="nav-label">Usuários</span>
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="nav-item">
+      <form method="post" class="nav-link" action="{% url 'logout' %}">
+        <i class="nav-icon fas fa-sign-out-alt"></i>
+        <button style="color: #c2c7d0;" type="submit" class="nav-label bg-transparent border border-0 text-left text-white m-0 p-0">Sair</button>
+      </form>
+    </li>
+  </ul>
 </aside>

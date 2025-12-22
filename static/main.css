@@ -180,18 +180,17 @@ body::-webkit-scrollbar {
 }
 
 .carousel-track {
-    display: flex;
-    gap: 0;
-    transition: transform .5s ease;
-    will-change: transform;
+    scroll-snap-type: x mandatory; 
+    scroll-behavior: smooth;
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none;
 }
 
 .card-item {
-    flex: 0 0 40%;
-    max-width: 40%;
-    box-sizing: border-box;
-    padding: .3rem;
-
+    width: calc(40% - 12px);
+    scroll-snap-align: start;
 }
 
 .card-item .card {
@@ -204,8 +203,8 @@ body::-webkit-scrollbar {
     transform: translateY(-50%);
     z-index: 10;
     border: none;
-    width: 28px;
-    height: 28px;
+    width: 35px;
+    height: 70px;
     padding: 0;
     display: flex;
     align-items: center;
@@ -221,10 +220,9 @@ body::-webkit-scrollbar {
     right: -10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767.98px) {
     .card-item {
-        flex: 0 0 80%;
-        max-width: 80%;
+        width: calc(80% - 8px); 
     }
 }
 

@@ -140,27 +140,28 @@
 <div class="carousel-shell mb-5">
   <h4 class="fw-bold" style="color: {{ identidade_visual.cor_sistema }};">Últimos projetos adicionados:</h4>
   <div class="carousel-viewport">
-    <div class="carousel-track w-100" id="cardTrack">
+    <div class="carousel-track w-100 d-flex gap-2 flex-nowrap overflow-auto" id="cardTrack">
       {% for projeto in projetos %}
-      <div class="card-item">
+      <div class="card-item flex-shrink-0 py-1">
         {% include 'partials/_card.html' %}
       </div>
       {% endfor %}
     </div>
   </div>
-
+  {% if projetos.exists %}
   <button class="btn btn-light carousel-control carousel-prev" id="prevBtn" style="color: blue;"
     aria-label="Anterior">‹</button>
   <button class="btn btn-light carousel-control carousel-next" id="nextBtn" style="color: blue;"
     aria-label="Próximo">›</button>
+  {% endif %}
 </div>
 
 <div class="carousel-shell mb-5">
   <h4 class="fw-bold" style="color: {{ identidade_visual.cor_sistema }};">Conheça projetos:</h4>
   <div class="carousel-viewport">
-    <div class="carousel-track w-100" id="cardTrack">
+    <div class="carousel-track w-100 d-flex gap-2 flex-nowrap overflow-auto" id="cardTrack">
       {% for projeto in projetos_random %}
-      <div class="card-item">
+      <div class="card-item flex-shrink-0 py-1">
         {% include 'partials/_card.html' %}
       </div>
       {% endfor %}
@@ -177,9 +178,9 @@
 <div class="carousel-shell mb-5">
   <h4 class="fw-bold" style="color: {{ identidade_visual.cor_sistema }};">Projetos mais vistos:</h4>
   <div class="carousel-viewport">
-    <div class="carousel-track w-100" id="cardTrack">
+    <div class="carousel-track w-100 d-flex gap-2 flex-nowrap overflow-auto" id="cardTrack">
       {% for projeto in projetos_mais_vistos %}
-      <div class="card-item">
+      <div class="card-item flex-shrink-0 py-1">
         {% include 'partials/_card.html' %}
       </div>
       {% endfor %}

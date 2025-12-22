@@ -1,68 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.carousel-shell').forEach(shell => {
-    const track = shell.querySelector('.carousel-track');
-    if (!track) return;
+document.addEventListener('DOMContentLoaded', function() {
+  
+  const SCROLL_AMOUNT = 300; 
+  const HIDE_CLASS = 'd-none'; 
+  
+  const carousels = document.querySelectorAll('.carousel-shell');
 
-    let items = Array.from(track.children);
-    const prevBtn = shell.querySelector('.carousel-prev');
-    const nextBtn = shell.querySelector('.carousel-next');
-
-    let index = 0;
-    let visible = 2.5;
-    let itemWidth = 0;
-
-    const clonesBefore = items.slice(-3).map(el => el.cloneNode(true));
-    const clonesAfter = items.slice(0, 3).map(el => el.cloneNode(true));
-
-    clonesBefore.forEach(clone => track.prepend(clone));
-    clonesAfter.forEach(clone => track.append(clone));
-
-    items = Array.from(track.children);
-
-    index = 3;
-
-    function recalc() {
-      visible = window.innerWidth < 768 ? 1.25 : 2.5;
-      itemWidth = items[0]?.getBoundingClientRect().width || 0;
-      move(true);
+  function checkScrollPosition(track, prevBtn, nextBtn) {
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    
+    if (track.scrollLeft <= 5) { 
+      prevBtn.classList.add(HIDE_CLASS); 
+    } else {
+      prevBtn.classList.remove(HIDE_CLASS); 
     }
 
-    function move(skipTransition = false) {
-      if (skipTransition) {
-        track.style.transition = 'none';
-      } else {
-        track.style.transition = 'transform 0.3s ease';
-      }
-
-      const translateX = index * itemWidth;
-      track.style.transform = `translateX(-${translateX}px)`;
+    if (track.scrollLeft >= maxScroll - 5) {  
+      nextBtn.classList.add(HIDE_CLASS); 
+    } else {
+      nextBtn.classList.remove(HIDE_CLASS);  
     }
+  }
 
-    function checkLoop() {
-      if (index >= items.length - 3) {
-        index = 3;
-        move(true); 
-      }
+  carousels.forEach(carousel => {
+    const track = carousel.querySelector('.carousel-track');
+    const prevBtn = carousel.querySelector('.carousel-prev');
+    const nextBtn = carousel.querySelector('.carousel-next');
 
-      if (index < 3) {
-        index = items.length - 6;
-        move(true); 
-      }
+    if (!track || !prevBtn || !nextBtn) {
+      console.warn('Carrossel ignorado: elementos de navegação não encontrados.');
+      return;
     }
+    
+    track.style.scrollBehavior = 'smooth'; 
+
+    checkScrollPosition(track, prevBtn, nextBtn);
+
+    track.addEventListener('scroll', () => {
+      checkScrollPosition(track, prevBtn, nextBtn);
+    });
 
     prevBtn.addEventListener('click', () => {
-      index--;
-      move();
-      setTimeout(checkLoop, 310);
+      track.scrollLeft -= SCROLL_AMOUNT;
     });
 
     nextBtn.addEventListener('click', () => {
-      index++;
-      move();
-      setTimeout(checkLoop, 310);
+      track.scrollLeft += SCROLL_AMOUNT;
     });
-
-    window.addEventListener('resize', recalc);
-    recalc();
   });
 });
