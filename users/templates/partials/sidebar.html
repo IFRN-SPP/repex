@@ -3,14 +3,16 @@
 
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <img src="{% static 'imgs/logo.png' %}" alt="" class="w-100" />
+    <a href="{% url "index" %}">
+        <img src="{% if identidade_visual.logo %}{{ identidade_visual.logo.url }}{% else %}{% static 'imgs/logo.png' %}{% endif %}" alt="Logo do sistema" class="w-100" />
+    </a>
   </div>
 
   <div class="user-panel">
     {% if request.user.profile.avatar %}
     <div class="user-img">
       <a class="text-decoration-none" href="{% url 'profile_detail' request.user.id %}">
-          <img src="{{ request.user.profile.avatar.url }}" alt="" class="w-100 rounded rounded-circle" />
+          <img src="{{ request.user.profile.avatar.url }}" alt="Seu avatar" class="w-100 rounded rounded-circle" />
         </a>
       </div>
       {% endif %}

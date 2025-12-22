@@ -71,103 +71,193 @@ Configurações do sistema
   </div>
 </div>
 
-<div class="card mb-3">
-  <div class="card-header d-flex">
-    <h3 class="card-title fw-bold my-auto {% if not identidade_visual.cor_sistema %}text-dark{% endif %}" style="{% if identidade_visual.cor_suplente %}
-                  color: {{ identidade_visual.cor_sistema }};
-                {% endif %}">Identidade visual</h3>
-    {% if not identidade_visual %}
-    <a class="btn btn-success ms-auto" href="{% url 'identidade_visual_create' %}">Cadastrar</a>
-    {% endif %}
+<div class="row">
+  <!-- Card da Identidade Visual -->
+  <div class="col-lg-6 mb-4">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-header bg-white d-flex align-items-center border-bottom">
+        <h3 class="card-title fw-bold my-auto mb-0 {% if not identidade_visual.cor_sistema %}text-dark{% endif %}" 
+            style="{% if identidade_visual.cor_sistema %}color: {{ identidade_visual.cor_sistema }};{% endif %}">
+          <i class="bi bi-palette me-2"></i>Identidade Visual
+        </h3>
+      </div>
+      <div class="card-body">
+        {% if identidade_visual %}
+        <div class="row mb-2">
+          <div class="col-md-4 mb-3 mb-md-0">
+            <div class="text-center">
+              <div class="border rounded p-3 mb-2 bg-light" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                {% if identidade_visual.logo %}
+                <img src="{{ identidade_visual.logo.url }}" alt="Logo do sistema" 
+                     class="img-fluid" style="max-height: 80px;" />
+                {% else %}
+                <div class="text-muted">
+                  <i class="bi bi-image" style="font-size: 2rem;"></i>
+                  <p class="small mt-2">Sem logo</p>
+                </div>
+                {% endif %}
+              </div>
+              <small class="text-muted">Logo</small>
+            </div>
+          </div>
+          
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-12 mb-3">
+                <label class="form-label text-muted small mb-1">Cor do Sistema</label>
+                <div class="d-flex align-items-center">
+                  <div class="color-preview rounded me-2" 
+                       style="width: 24px; height: 24px; background-color: {{ identidade_visual.cor_sistema|default:'#6c757d' }}; border: 1px solid #dee2e6;"></div>
+                  <span>{{ identidade_visual.cor_sistema|default:"Não definida" }}</span>
+                </div>
+              </div>
+              
+              <div class="col-12 mb-3">
+                <label class="form-label text-muted small mb-1">Cor Suplente</label>
+                <div class="d-flex align-items-center">
+                  {% if identidade_visual.cor_suplente %}
+                  <div class="color-preview rounded me-2" 
+                       style="width: 24px; height: 24px; background-color: {{ identidade_visual.cor_suplente }}; border: 1px solid #dee2e6;"></div>
+                  <span>{{ identidade_visual.cor_suplente }}</span>
+                  {% else %}
+                  <span class="text-muted">Vazio</span>
+                  {% endif %}
+                </div>
+              </div>
+              
+              <div class="col-12">
+                <label class="form-label text-muted small mb-1">Cor dos Títulos</label>
+                <div class="d-flex align-items-center">
+                  <div class="color-preview rounded me-2" 
+                       style="width: 24px; height: 24px; background-color: {{ identidade_visual.cor_titulo|default:'#212529' }}; border: 1px solid #dee2e6;"></div>
+                  <span>{{ identidade_visual.cor_titulo|default:"Não definida" }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <label class="form-label text-muted small mb-1">Frase na página inicial:</label>
+            <p>{{ identidade_visual.pagina_inicial_frase }}</p>
+          </div>
+          <div class="col-md-4">
+            <div class="text-center">
+              <div class="border rounded p-3 mb-2 bg-light" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                {% if identidade_visual.imagem %}
+                <img src="{{ identidade_visual.imagem.url }}" alt="imagem vitrine" 
+                     class="img-fluid" style="max-height: 80px;" />
+                {% else %}
+                <div class="text-muted">
+                  <i class="bi bi-image" style="font-size: 2rem;"></i>
+                  <p class="small mt-2">Sem imagem na tela inicial</p>
+                </div>
+                {% endif %}
+              </div>
+              <small class="text-muted">Imagem na tela inicial</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-4 pt-3 border-top">
+          <a href="{% url 'identidade_visual_update' identidade_visual.id %}" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i>Editar Identidade Visual
+          </a>
+        </div>
+        
+        {% else %}
+        <div class="text-center py-5">
+          <i class="bi bi-palette text-muted" style="font-size: 3rem;"></i>
+          <p class="text-muted mt-3">Nenhuma identidade visual cadastrada</p>
+          <a href="{% url 'identidade_visual_create' %}" class="btn btn-success mt-2">
+            <i class="bi bi-plus-circle me-1"></i>Criar Identidade Visual
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
-  <div class="card-body table-responsive p-0">
-    <table class="table table-hover text-nowrap">
-      <thead>
-        <tr>
-          <th>Logo</th>
-          <th>Cor do sistema</th>
-          <th>Cor suplente para o sistema</th>
-          <th>Cor dos títulos</th>
-          <th>Opção</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i in identidades %}
-        <tr>
-          <td>
-            {% if i.logo %}
-            <img src="{{ i.logo.url }}" alt="logo do sistema" class="img-fluid" style="max-width: 50px;" />
-            {% else %}
-            Vazio
-            {% endif %}
-          </td>
-          <td>{{ i.cor_sistema }}</td>
-          <td>
-            {% if i.cor_suplente %}
-            {{ i.cor_suplente }}
-            {% else %}
-            Vazio
-            {% endif %}
-          </td>
-          <td>{{ i.cor_titulo }}</td>
-          <td>
-            <a href="{% url 'identidade_visual_update' i.id %}" class="btn btn-sm btn-warning">Editar</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
 
-<div class="card mb-3">
-  <div class="card-header d-flex">
-    <h3 class="card-title fw-bold my-auto {% if not identidade_visual.cor_sistema %}text-dark{% endif %}" style="{% if identidade_visual.cor_suplente %}
-                  color: {{ identidade_visual.cor_sistema }};
-                {% endif %}">Instituição</h3>
-    {% if not instituicao %}
-    <a class="btn btn-success ms-auto" href="{% url 'instituicao_create' %}">Cadastrar</a>
-    {% endif %}
-  </div>
-  <div class="card-body table-responsive p-0">
-    <table class="table table-hover text-nowrap">
-      <thead>
-        <tr>
-          <th>Logo</th>
-          <th>Nome</th>
-          <th>CEP</th>
-          <th>Endereço</th>
-          <th>Site</th>
-          <th>Opção</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for i in instituicoes %}
-        <tr>
-          <td>
-            {% if i.logo %}
-            <img src="{{ i.logo.url }}" alt="logo do sistema" class="img-fluid" style="max-width: 50px;" />
-            {% else %}
-            Vazio
-            {% endif %}
-          </td>
-          <td>{{ i.nome }}</td>
-          <td>
-            {% if i.cep %}
-            {{ i.cep }}
-            {% else %}
-            Vazio
-            {% endif %}
-          </td>
-          <td>{{ i.endereco }}</td>
-          <td>{{ i.site }}</td>
-          <td>
-            <a href="{% url 'instituicao_update' i.id %}" class="btn btn-sm btn-warning">Editar</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="col-lg-6 mb-4">
+    <div class="card h-100 border-0 shadow-sm">
+      <div class="card-header bg-white d-flex align-items-center border-bottom">
+        <h3 class="card-title fw-bold my-auto mb-0 {% if not identidade_visual.cor_sistema %}text-dark{% endif %}" 
+            style="{% if identidade_visual.cor_sistema %}color: {{ identidade_visual.cor_sistema }};{% endif %}">
+          <i class="bi bi-building me-2"></i>Instituição
+        </h3>
+      </div>
+      <div class="card-body">
+        {% if instituicao %}
+        <div class="row">
+          <!-- Logo -->
+          <div class="col-md-4 mb-3 mb-md-0">
+            <div class="text-center">
+              <div class="border rounded p-3 mb-2 bg-light" style="height: 120px; display: flex; align-items: center; justify-content: center;">
+                {% if instituicao.logo %}
+                <img src="{{ instituicao.logo.url }}" alt="Logo da instituição" 
+                     class="img-fluid" style="max-height: 80px;" />
+                {% else %}
+                <div class="text-muted">
+                  <i class="bi bi-building" style="font-size: 2rem;"></i>
+                  <p class="small mt-2">Sem logo</p>
+                </div>
+                {% endif %}
+              </div>
+              <small class="text-muted">Logo</small>
+            </div>
+          </div>
+          
+          <!-- Informações -->
+          <div class="col-md-8">
+            <div class="row">
+              <div class="col-12 mb-3">
+                <label class="form-label text-muted small mb-1">Nome</label>
+                <p class="mb-0 fw-semibold">{{ instituicao.nome }}</p>
+              </div>
+              
+              <div class="col-12 mb-3">
+                <label class="form-label text-muted small mb-1">Endereço</label>
+                <p class="mb-0">{{ instituicao.endereco|default:"Não informado" }}</p>
+              </div>
+              
+              <div class="col-12 mb-3">
+                <label class="form-label text-muted small mb-1">CEP</label>
+                <p class="mb-0">{{ instituicao.cep|default:"Não informado" }}</p>
+              </div>
+              
+              <div class="col-12">
+                <label class="form-label text-muted small mb-1">Site</label>
+                {% if instituicao.site %}
+                <a href="{{ instituicao.site }}" target="_blank" class="text-decoration-none">
+                  {{ instituicao.site|truncatechars:30 }}
+                  <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                </a>
+                {% else %}
+                <p class="mb-0 text-muted">Não informado</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Botão de Edição -->
+        <div class="mt-4 pt-3 border-top">
+          <a href="{% url 'instituicao_update' instituicao.id %}" class="btn btn-warning">
+            <i class="bi bi-pencil me-1"></i>Editar Instituição
+          </a>
+        </div>
+        
+        {% else %}
+        <div class="text-center py-5">
+          <i class="bi bi-building text-muted" style="font-size: 3rem;"></i>
+          <p class="text-muted mt-3">Nenhuma instituição cadastrada</p>
+          <a href="{% url 'instituicao_create' %}" class="btn btn-success mt-2">
+            <i class="bi bi-plus-circle me-1"></i>Criar Instituição
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

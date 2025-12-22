@@ -12,15 +12,3 @@
     </div>
   </form>
 {% endblock %}
-{% block extra_scripts %}
-  <script>
-    const input = document.getElementById('id_cor_suplente');
-    const defaultValue = input.value;
-
-    input.form.addEventListener('submit', () => {
-        if (input.value === defaultValue) {
-            input.disabled = true; 
-        }
-    });
-  </script>
-{% endblock extra_scripts %}
