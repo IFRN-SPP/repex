@@ -22,6 +22,7 @@ echo "Starting Gunicorn..."
 exec gunicorn --bind unix:/run/sockets/repex.sock \
 	--workers 3 \
 	--timeout 60 \
+    --umask 007 \
 	--access-logfile - \
 	--error-logfile - \
 	config.wsgi:application
